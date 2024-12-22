@@ -14,6 +14,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:prettier/recommended',
   ],
+  ignores: ['src/types/global.d.ts'],
   rules: {
     'prettier/prettier': 'warn',
     'node/no-missing-import': 'off',

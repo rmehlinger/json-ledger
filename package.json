@@ -123,6 +123,6 @@
     ]
   },
   "dependencies": {
-    "lodash": "^4.17.21"
+    "es-toolkit": "^1.30.1"
   }
 }
