@@ -1,8 +1,36 @@
 {
-  "name": "typescript-npm-package-template",
+  "name": "json-ledger",
   "version": "0.0.0-development",
-  "description": "A template for creating npm packages using TypeScript and VSCode",
+  "description": "A framework for",
+  "keywords": [
+    "boilerplate",
+    "template",
+    "typescript",
+    "vscode",
+    "jest",
+    "husky",
+    "commitizen",
+    "semantic-release",
+    "codecov"
+  ],
+  "homepage": "https://github.com/rmehlinger/json-ledger#readme",
+  "bugs": {
+    "url": "https://github.com/rmehlinger/json-ledger/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rmehlinger/json-ledger.git"
+  },
+  "publishConfig": {
+    "@rmehlinger:registry": "https://npm.pkg.github.com"
+  },
+  "license": "MIT",
+  "author": "Richard Mehlinger <rmehlinger@gmail.com> (https://github.com/rmehlinger)",
+  "type": "commonjs",
   "main": "./lib/index.js",
+  "directories": {
+    "test": "test"
+  },
   "files": [
     "lib/**/*"
   ],
@@ -17,34 +45,11 @@
     "test": "jest --coverage",
     "typecheck": "tsc --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ryansonshine/typescript-npm-package-template.git"
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/@ryansonshine/cz-conventional-changelog"
+    }
   },
-  "license": "MIT",
-  "author": {
-    "name": "Ryan Sonshine",
-    "email": "ryansonshine@users.noreply.github.com",
-    "url": "https://github.com/ryansonshine"
-  },
-  "engines": {
-    "node": ">=12.0"
-  },
-  "keywords": [
-    "boilerplate",
-    "template",
-    "typescript",
-    "vscode",
-    "jest",
-    "husky",
-    "commitizen",
-    "semantic-release",
-    "codecov"
-  ],
-  "bugs": {
-    "url": "https://github.com/ryansonshine/typescript-npm-package-template/issues"
-  },
-  "homepage": "https://github.com/ryansonshine/typescript-npm-package-template#readme",
   "devDependencies": {
     "@ryansonshine/commitizen": "^4.2.8",
     "@ryansonshine/cz-conventional-changelog": "^3.3.4",
@@ -66,10 +71,8 @@
     "ts-node": "^10.2.1",
     "typescript": "^4.2.4"
   },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/@ryansonshine/cz-conventional-changelog"
-    }
+  "engines": {
+    "node": ">=12.0"
   },
   "lint-staged": {
     "*.ts": "eslint --cache --cache-location .eslintcache --fix"
