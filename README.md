@@ -1,117 +1,163 @@
-# typescript-npm-package-template
+# json-ledger
 
-> Template to kickstart creating a Node.js module using TypeScript and VSCode
-
-Inspired by [node-module-boilerplate](https://github.com/sindresorhus/node-module-boilerplate)
+`json-ledger` is a lightweight JavaScript/TypeScript package designed to efficiently apply a series of changes to JSON objects and arrays. It provides utility functions to update, delete, or modify JSON data structures in a non-mutating and type-safe way.
 
 ## Features
 
-- [Semantic Release](https://github.com/semantic-release/semantic-release)
-- [Issue Templates](https://github.com/ryansonshine/typescript-npm-package-template/tree/main/.github/ISSUE_TEMPLATE)
-- [GitHub Actions](https://github.com/ryansonshine/typescript-npm-package-template/tree/main/.github/workflows)
-- [Codecov](https://about.codecov.io/)
-- [VSCode Launch Configurations](https://github.com/ryansonshine/typescript-npm-package-template/blob/main/.vscode/launch.json)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Husky](https://github.com/typicode/husky)
-- [Lint Staged](https://github.com/okonet/lint-staged)
-- [Commitizen](https://github.com/search?q=commitizen)
-- [Jest](https://jestjs.io/)
-- [ESLint](https://eslint.org/)
-- [Prettier](https://prettier.io/)
+- **Immutable by default:** The original JSON object or array is never mutated. Changes are applied to a deep clone of the input.
+- **Path-based updates:** Supports dot-separated string paths or arrays of strings for deeply nested properties.
+- **Deletion support:** Delete properties or array elements by specifying their path.
+- **Type safety:** Fully typed in TypeScript for safer and more predictable usage.
+- **Compatibility:** Built on top of `es-toolkit` for compatibility and utility functions.
 
-## Getting started
-
-### Set up your repository
-
-**Click the "Use this template" button.**
-
-Alternatively, create a new directory and then run:
+## Installation
 
 ```bash
-curl -fsSL https://github.com/ryansonshine/typescript-npm-package-template/archive/main.tar.gz | tar -xz --strip-components=1
-```
-
-Replace `FULL_NAME`, `GITHUB_USER`, and `REPO_NAME` in the script below with your own details to personalize your new package:
-
-```bash
-FULL_NAME="John Smith"
-GITHUB_USER="johnsmith"
-REPO_NAME="my-cool-package"
-sed -i.mybak "s/\([\/\"]\)(ryansonshine)/$GITHUB_USER/g; s/typescript-npm-package-template\|my-package-name/$REPO_NAME/g; s/Ryan Sonshine/$FULL_NAME/g" package.json package-lock.json README.md
-rm *.mybak
-```
-
-### Add NPM Token
-
-Add your npm token to your GitHub repository secrets as `NPM_TOKEN`.
-
-### Add Codecov integration
-
-Enable the Codecov GitHub App [here](https://github.com/apps/codecov).
-
-**Remove everything from here and above**
-
----
-
-# my-package-name
-
-[![npm package][npm-img]][npm-url]
-[![Build Status][build-img]][build-url]
-[![Downloads][downloads-img]][downloads-url]
-[![Issues][issues-img]][issues-url]
-[![Code Coverage][codecov-img]][codecov-url]
-[![Commitizen Friendly][commitizen-img]][commitizen-url]
-[![Semantic Release][semantic-release-img]][semantic-release-url]
-
-> My awesome module
-
-## Install
-
-```bash
-npm install my-package-name
+npm install json-ledger
 ```
 
 ## Usage
 
-```ts
-import { myPackage } from 'my-package-name';
+### Basic Example
 
-myPackage('hello');
-//=> 'hello from my package'
+```typescript
+import { applyChanges } from 'json-ledger';
+
+const initialJson = {
+  user: {
+    name: 'Alice',
+    address: {
+      city: 'Wonderland',
+      zip: '12345',
+    },
+  },
+};
+
+const changes = [
+  { path: 'user.name', value: 'Bob' },
+  { path: 'user.address.zip', value: '54321' },
+  { path: 'user.phone', value: '123-456-7890' },
+  { path: 'user.address.city', value: undefined }, // Deletes the city property
+];
+
+const updatedJson = applyChanges(initialJson, changes);
+
+console.log(updatedJson);
+```
+
+**Output:**
+
+```json
+{
+  "user": {
+    "name": "Bob",
+    "address": {
+      "zip": "54321"
+    },
+    "phone": "123-456-7890"
+  }
+}
+```
+
+### Advanced Example: Working with Arrays
+
+```typescript
+const initialJson = {
+  items: [
+    { id: 1, name: 'Item 1' },
+    { id: 2, name: 'Item 2' },
+    { id: 3, name: 'Item 3' },
+  ],
+};
+
+const changes = [
+  { path: 'items.1.name', value: 'Updated Item 2' }, // Update the second item
+  { path: 'items.2', value: undefined }, // Delete the third item
+];
+
+const updatedJson = applyChanges(initialJson, changes);
+
+console.log(updatedJson);
+```
+
+**Output:**
+
+```json
+{
+  "items": [
+    { "id": 1, "name": "Item 1" },
+    { "id": 2, "name": "Updated Item 2" }
+  ]
+}
 ```
 
 ## API
 
-### myPackage(input, options?)
+### `applyChanges`
 
-#### input
+#### Parameters:
 
-Type: `string`
+- **`initialJson`** (`JSONArray | JSONObject`): The JSON object or array to apply changes to.
+- **`changes`** (`ReadonlyArray<Change | ReadonlyArray<Change>>`): One or more changes to apply.
 
-Lorem ipsum.
+#### Returns:
 
-#### options
+- A new JSON object or array with the applied changes.
 
-Type: `object`
+### Change Type
 
-##### postfix
+A `Change` object has the following structure:
 
-Type: `string`
-Default: `rainbows`
+```typescript
+type Change = {
+  path: Path; // Path to the property or array element to modify
+  value: JSONValue | undefined; // New value to set, or undefined to delete the property/element
+};
+```
 
-Lorem ipsum.
+### `Path`
 
-[build-img]:https://github.com/ryansonshine/typescript-npm-package-template/actions/workflows/release.yml/badge.svg
-[build-url]:https://github.com/ryansonshine/typescript-npm-package-template/actions/workflows/release.yml
-[downloads-img]:https://img.shields.io/npm/dt/typescript-npm-package-template
-[downloads-url]:https://www.npmtrends.com/typescript-npm-package-template
-[npm-img]:https://img.shields.io/npm/v/typescript-npm-package-template
-[npm-url]:https://www.npmjs.com/package/typescript-npm-package-template
-[issues-img]:https://img.shields.io/github/issues/ryansonshine/typescript-npm-package-template
-[issues-url]:https://github.com/ryansonshine/typescript-npm-package-template/issues
-[codecov-img]:https://codecov.io/gh/ryansonshine/typescript-npm-package-template/branch/main/graph/badge.svg
-[codecov-url]:https://codecov.io/gh/ryansonshine/typescript-npm-package-template
-[semantic-release-img]:https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
-[semantic-release-url]:https://github.com/semantic-release/semantic-release
-[commitizen-img]:https://img.shields.io/badge/commitizen-friendly-brightgreen.svg
-[commitizen-url]:http://commitizen.github.io/cz-cli/
+- A `Path` can be either:
+  - A dot-separated string (e.g., `'user.address.city'`)
+  - An array of strings (e.g., `['user', 'address', 'city']`)
+
+### `JSONValue`
+
+A `JSONValue` can be any of the following:
+
+- `string`
+- `number`
+- `boolean`
+- `null`
+- `JSONObject`
+- `JSONArray`
+
+### Utility Functions
+
+#### `set`
+
+Sets a value at a specified path within a JSON object or array.
+
+#### `get`
+
+Retrieves a value from a specified path within a JSON object or array.
+
+#### `has`
+
+Checks if a property or element exists at a specified path.
+
+#### `deletePropertyPath`
+
+Deletes a property or element at a specified path within a JSON object or array.
+
+## Contributing
+
+Contributions are welcome! Please follow the standard GitHub flow:
+
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
